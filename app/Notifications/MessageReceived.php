@@ -44,10 +44,10 @@ class MessageReceived extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line($this->message->from->name . ' vous a envoyé un message.')
-                    ->line($this->message->content)
-                    ->action('Voir le message', url(route('conversations.show', ['id' => $this->message->from_id])))
-                    ->line('Thank you for using our application!');
+            ->line($this->message->from->name . ' vous a envoyé un message.')
+            ->line($this->message->content)
+            ->action('Voir le message', route('conversations.show', $this->message->from_id))
+            ->line('Thank you for using our application!');
     }
 
     /**

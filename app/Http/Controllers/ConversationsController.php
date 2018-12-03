@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\User;
-// use App\Message;
 use App\Repository\ConversationsRepository;
+use App\Notifications\MessageReceived;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreMessageRequest;
@@ -21,6 +21,7 @@ class ConversationsController extends Controller
 
 	public function __construct (ConversationsRepository $repository, AuthManager $auth)
     {
+        $this->middleware('auth');
         $this->repository = $repository;
         $this->auth = $auth;
     }
