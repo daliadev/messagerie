@@ -47,3 +47,17 @@ fetch('/api/user', {
   }
 })
 */
+
+
+import Vue from 'vue'
+import Messagerie from './components/MessagerieComponent'
+
+
+new Vue({
+  el: '#messagerie',
+  components: {
+  	Messagerie
+  }
+  // ,
+  // render: h => h(Messagerie)
+})
