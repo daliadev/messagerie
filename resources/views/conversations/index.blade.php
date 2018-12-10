@@ -3,7 +3,7 @@
 
 @section('content')
 	
-	<div id="messagerie">
+	<div id="messagerie" class="container">
 		<Messagerie :user="{{ Auth::user()->id }}"></Messagerie>
 	</div>
 

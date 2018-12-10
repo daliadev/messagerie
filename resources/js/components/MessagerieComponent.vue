@@ -15,6 +15,9 @@
 export default {
 	props: {
 		user: Number
+	},
+	mounted: function () {
+		this.$store.dispatch('loadConversations')
 	}
 }
 </script>
