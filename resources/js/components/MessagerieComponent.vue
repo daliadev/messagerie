@@ -1,22 +1,34 @@
 <template>
+
 	<div class="row">
 		<div class="col-md-3">
 			<div class="list-group">
+
+				<template v-for="conversation in conversations">
 					<a class="list-group-item d-flex justify-content-between align-items-center">
-						John Doe {{ user }}
-						<span class="badge badge-pill badge-primary">3</span>
+						{{ conversation.name }}
+						<span class="badge badge-pill badge-primary" v-if="conversation.unread">{{ conversation.unread }}</span>
 					</a>
+				</template>
+
 			</div>
 		</div>
 	</div>
+
 </template>
 
+
 <script>
+import {mapGetters} from 'vuex'
+
 export default {
 	props: {
 		user: Number
 	},
-	mounted: function () {
+	computed: {
+		...mapGetters(['conversations'])
+	},
+	mounted () {
 		this.$store.dispatch('loadConversations')
 	}
 }

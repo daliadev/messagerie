@@ -23,6 +23,8 @@ class ConversationsController extends Controller
 
 	public function index (Request $request)
   {
+  	// throw new \Exception();
+  	
   	return response()
   		->json([
   			'conversations' => $this->repository->getConversations($request->user()->id)
