@@ -1,22 +1,29 @@
-/*
-fetch('/api/user', {
-	credentials: 'same-origin',
-	headers: {
-    // 'Accept': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest',
-    // 'Content-Type': 'application/json',
-    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-  }
-})
-*/
-
 import Vue from 'vue'
+import VueRouter from 'vue-router'
+
 import Messagerie from './components/MessagerieComponent'
 import Store from './store/store'
 
+Vue.use(VueRouter)
 
-new Vue({
-  el: '#messagerie',
-  components: { Messagerie },
-  store: Store
-})
+let $messagerie = document.querySelector('#messagerie')
+
+if ($messagerie) {
+	const routes = [
+		{path: '/'},
+		{path: '/:id', name: 'conversation'}
+	]
+
+	const router = new VueRouter({
+		mode: 'history',
+		routes,
+		base: $messagerie.getAttribute('data-base')
+	})
+
+	new Vue({
+	  el: '#messagerie',
+	  components: { Messagerie },
+	  store: Store,
+	  router
+	})
+}
