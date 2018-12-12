@@ -3,8 +3,10 @@
 
 @section('content')
 	
-	<div id="messagerie" class="container" data-base="{{ route('conversations', [], false) }}">
-		<Messagerie :user="{{ Auth::user()->id }}"></Messagerie>
-	</div>
+	<div class="container">
+		<div id="messagerie" data-base="{{ route('conversations', [], false) }}">
+			<Messagerie :user="{{ Auth::user()->id }}"></Messagerie>
+		</div>
+</div>
 
 @endsection
