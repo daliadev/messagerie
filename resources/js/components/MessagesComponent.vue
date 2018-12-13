@@ -1,37 +1,39 @@
 <template>
-
-		
 		<div class="card">
 			<div class="card-header">{{ user }}</div>
 			<div class="card-body conversations">
-				<div class="row">
-					<div class="col-md-10">
-						<p>Mon message
-						</p>
-					</div>
-				</div>
-				<hr>
-
+				<message :message="mess" v-for="mess in messages"></message>		
 			</div>
 		</div>
-
 </template>
 
 
 <script>
-// import {mapGetters} from 'vuex'
+import Message from './MessageComponent'
 
 export default {
+	components: { Message },
 	props: {
 		user: Number
 	},
 	computed: {
 		messages: function () {
-			this.$store.getters.messages(this.$route.params.id)
+			return this.$store.getters.messages(this.$route.params.id)
 		}
 	},
 	mounted () {
-		this.$store.dispatch('loadMessages', this.$route.params.id)
+		this.loadMessages()
+		// this.$store.dispatch('loadMessages', this.$route.params.id)
+	},
+	watch: {
+		'$route.params.id': function () {
+			this.loadMessages()
+		}
+	},
+	methods: {
+		loadMessages: function () {
+			this.$store.dispatch('loadMessages', this.$route.params.id)
+		}
 	}
 }
 	

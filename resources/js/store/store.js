@@ -58,6 +58,7 @@ export default new Vuex.Store({
 		addMessages: function (state, { messages, id }) {
 			let conversation = state.conversations[id] || {}
 			conversation.messages = messages
+			conversation.loaded = true
 			state.conversations = {...state.conversations, ...{[id]: conversation}}
 		}
 	},
