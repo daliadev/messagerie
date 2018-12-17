@@ -15328,6 +15328,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 	computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['conversations'])),
 	mounted: function mounted() {
 		this.$store.dispatch('loadConversations');
+		this.$store.commit('setUser', this.user);
 	}
 });
 
@@ -15447,6 +15448,9 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__MessageComponent__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__MessageComponent___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__MessageComponent__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(3);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 //
 //
 //
@@ -15457,22 +15461,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: { Message: __WEBPACK_IMPORTED_MODULE_0__MessageComponent___default.a },
-	props: {
-		user: Number
-	},
-	computed: {
+	computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapGetters */])(['user']), {
 		messages: function messages() {
 			return this.$store.getters.messages(this.$route.params.id);
 		}
-	},
+	}),
 	mounted: function mounted() {
 		this.loadMessages();
-		// this.$store.dispatch('loadMessages', this.$route.params.id)
 	},
 
 	watch: {
@@ -15556,11 +15557,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-// import {mapGetters} from 'vuex'
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: {
+		user: Number,
 		message: Object
+	},
+	computed: {
+		isMe: function isMe() {
+			return this.message.from.id === this.user;
+		},
+		cls: function cls() {
+			var classes = ['col-md-10'];
+			if (this.message.from.id === this.user) {
+				classes.push('offset-md-2', 'text-right');
+			}
+			return classes;
+		},
+		name: function name() {
+			return this.isMe ? 'Moi' : this.message.from.name;
+		}
 	}
 });
 
@@ -15574,9 +15590,9 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-md-10" }, [
+      _c("div", { class: _vm.cls }, [
         _c("p", [
-          _c("strong", [_vm._v(_vm._s(_vm.message.from.name))]),
+          _c("strong", [_vm._v(_vm._s(_vm.name))]),
           _c("br"),
           _vm._v("\n\t\t\t\t" + _vm._s(_vm.message.content) + "\n\t\t\t")
         ])
@@ -15610,8 +15626,11 @@ var render = function() {
     _c(
       "div",
       { staticClass: "card-body conversations" },
-      _vm._l(_vm.messages, function(mess) {
-        return _c("message", { attrs: { message: mess } })
+      _vm._l(_vm.messages, function(mess, i) {
+        return _c("message", {
+          key: i,
+          attrs: { message: mess, user: _vm.user }
+        })
       })
     )
   ])
@@ -15698,13 +15717,24 @@ var get = function () {
 
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_2_vuex__["a" /* default */].Store({
 	strict: true,
+
 	state: {
+		user: null,
 		conversations: {},
 		messages: {}
 	},
+
 	getters: {
+		user: function user(state) {
+			return state.user;
+		},
 		conversations: function conversations(state) {
 			return state.conversations;
+		},
+		conversation: function conversation(state) {
+			return function (id) {
+				return state.conversations[id] || {};
+			};
 		},
 		messages: function messages(state) {
 			return function (id) {
@@ -15717,7 +15747,11 @@ var get = function () {
 			};
 		}
 	},
+
 	mutations: {
+		setUser: function setUser(state, userId) {
+			state.user = userId;
+		},
 		addConversations: function addConversations(state, _ref2) {
 			var conversations = _ref2.conversations;
 
@@ -15737,6 +15771,7 @@ var get = function () {
 			state.conversations = _extends({}, state.conversations, _defineProperty({}, id, conversation));
 		}
 	},
+
 	actions: {
 		loadConversations: function () {
 			var _ref4 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee2(context) {
@@ -15774,15 +15809,20 @@ var get = function () {
 					while (1) {
 						switch (_context3.prev = _context3.next) {
 							case 0:
-								_context3.next = 2;
+								if (context.getters.conversation(conversationId).loaded) {
+									_context3.next = 5;
+									break;
+								}
+
+								_context3.next = 3;
 								return get('/api/conversations/' + conversationId);
 
-							case 2:
+							case 3:
 								response = _context3.sent;
 
 								context.commit('addMessages', { messages: response.messages, id: conversationId });
 
-							case 4:
+							case 5:
 							case 'end':
 								return _context3.stop();
 						}
@@ -15797,6 +15837,7 @@ var get = function () {
 			return loadMessages;
 		}()
 	}
+
 }));
 
 /***/ }),
